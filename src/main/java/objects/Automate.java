@@ -1,8 +1,12 @@
 package objects;
 
 import com.google.common.collect.Sets;
+import k.Edge;
+import k.Vertex;
 import lombok.Getter;
 import lombok.Setter;
+import org.checkerframework.checker.nullness.qual.AssertNonNullIfNonNull;
+import sun.jvm.hotspot.utilities.Assert;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -19,46 +24,25 @@ public class Automate {
     private final LinkedHashSet<String> I = Sets.newLinkedHashSet();
     private final LinkedHashSet<String> T = Sets.newLinkedHashSet();
     private List<Etat> etats = new ArrayList<>();
-
-    public void readFromFile(String fileName) throws IOException {
+    public void read(String fileName) throws IOException {
+        String[] values;
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         String line = br.readLine();
+        int verticesCount = Integer.parseInt(line);
 
-        int alphabetCount = Integer.parseInt(line);
-        char character = 'a';
-        // Alphabet - A
-        for (int i = 0; i < alphabetCount; i++) {
-            A.add(character++);
+        for (int i = 0; i < verticesCount; i++) {
+            A.add((char)(i+'0'));
         }
 
-        // Sommets - Q
-        line = br.readLine();
-        int sommetCount = Integer.parseInt(line);
-
-        for (int i = 1; i <= sommetCount; i++) {
+        for (int i = 0; i < verticesCount; i++) {
             etats.add(new Etat(i + "", false, false, new ArrayList<>()));
         }
 
-
-        // Etats initiales - I
         line = br.readLine();
-        String[] values = line.split("\\s");
+        int edgesCount = Integer.parseInt(line);
 
-        for (int i = 1; i <= Integer.parseInt(values[0]); i++) {
-            I.add(values[i]);
-        }
-
-        // Etats terminales - T
-        line = br.readLine();
-        values = line.split("\\s");
-
-        for (int i = 1; i <= Integer.parseInt(values[0]); i++) {
-            T.add(values[i]);
-        }
-
-        // Transition - E
-        line = br.readLine();
-        do {
+        for (int i = 0; i < edgesCount; i++) {
+            line = br.readLine();
             values = line.split("\\s");
             String depart = values[0];
             char value = values[1].charAt(0);
@@ -66,16 +50,15 @@ public class Automate {
 
             if (!etats.get(etats.indexOf(getEtatFromVal(depart))).hasSuccesseur(new Transition(value, getEtatFromVal(depart), getEtatFromVal(arrivee))))
                 etats.get(etats.indexOf(getEtatFromVal(depart))).getTransitions().add(new Transition(value, getEtatFromVal(depart), getEtatFromVal(arrivee)));
-
-            line = br.readLine();
-        } while (line != null);
+        }
         updateTermInit();
         br.close();
     }
 
-    public void display() {
-        System.out.println("Etat initiaux : " + I + "\nEtat Terminaux :" + T);
 
+
+
+    public void display() {
         String indent = String.format("%-" + (A.size() * 3) + "s", "");
 
         System.out.print("Etats" + indent.substring(0, indent.length() - "Etats".length()));
