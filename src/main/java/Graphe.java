@@ -58,10 +58,11 @@ public class Graphe {
             length = opt.get();
 
         indentation = String.format("%-" + (length + 3) + "s", "");
+        String indentationWithVertices = indentation.substring(0, indentation.length() - length);
 
         line = indentation;
         for (Vertex vertex : vertices)
-            line = line + vertex + indentation;
+            line = line + vertex + indentationWithVertices;
 
         System.out.println(line);
         line = "";
@@ -69,12 +70,14 @@ public class Graphe {
         Iterator<Vertex> vertexIterator = vertices.iterator();
         for (int i = 0; i < vertices.size(); i++) {
             Vertex vertex = vertexIterator.next();
-            line = vertex + indentation.substring(0, indentation.length() - length);
+            line = vertex + indentationWithVertices;
             List<Edge> vertexEdges = edges.stream().filter(e -> e.getOrigin().equals(vertex)).collect(Collectors.toList());
 
             for (Vertex v : vertices) {
                 List<Edge> outEdges = vertexEdges.stream().filter(vx -> vx.getDestination().equals(v)).collect(Collectors.toList());
-                line = line + ((outEdges.size() == 0) ? indentation : outEdges.stream().map(e -> e.getValue()).collect(Collectors.toList())) + indentation;
+                List<String> values = outEdges.stream().map(e -> String.valueOf(e.getValue())).collect(Collectors.toList());
+                String adjacentVertices = String.join(", ", values);
+                line = line + ((outEdges.size() == 0) ? indentation : adjacentVertices + indentation.substring(0, indentation.length() - adjacentVertices.length()));
             }
 
             System.out.println(line);
