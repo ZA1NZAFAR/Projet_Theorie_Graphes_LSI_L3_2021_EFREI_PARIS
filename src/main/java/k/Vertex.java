@@ -1,3 +1,5 @@
+package k;
+
 import java.util.Objects;
 
 public class Vertex {

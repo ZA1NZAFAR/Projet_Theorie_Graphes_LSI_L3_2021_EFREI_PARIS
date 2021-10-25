@@ -1,3 +1,4 @@
+package k;
 
 public class Edge implements Comparable<Edge> {
     private Vertex origin;
