@@ -11,19 +11,16 @@ import sun.jvm.hotspot.utilities.Assert;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class Automate {
     private final LinkedHashSet<Character> A = Sets.newLinkedHashSet();
-    private final LinkedHashSet<String> I = Sets.newLinkedHashSet();
-    private final LinkedHashSet<String> T = Sets.newLinkedHashSet();
+
     private List<Etat> etats = new ArrayList<>();
+
     public void read(String fileName) throws IOException {
         String[] values;
         BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -31,7 +28,7 @@ public class Automate {
         int verticesCount = Integer.parseInt(line);
 
         for (int i = 0; i < verticesCount; i++) {
-            A.add((char)(i+'0'));
+            A.add((char) (i + '0'));
         }
 
         for (int i = 0; i < verticesCount; i++) {
@@ -51,11 +48,8 @@ public class Automate {
             if (!etats.get(etats.indexOf(getEtatFromVal(depart))).hasSuccesseur(new Transition(value, getEtatFromVal(depart), getEtatFromVal(arrivee))))
                 etats.get(etats.indexOf(getEtatFromVal(depart))).getTransitions().add(new Transition(value, getEtatFromVal(depart), getEtatFromVal(arrivee)));
         }
-        updateTermInit();
         br.close();
     }
-
-
 
 
     public void display() {
@@ -85,11 +79,14 @@ public class Automate {
         return null;
     }
 
-    void updateTermInit() {
-        for (String s : I)
-            etats.get(etats.indexOf(getEtatFromVal(s))).setInitial(true);
-        for (String s : T)
-            etats.get(etats.indexOf(getEtatFromVal(s))).setTerminal(true);
-    }
+    public List<Etat> getEtats0() {
+        Set<Etat> tmp = new HashSet<>();
+        for (Etat e : etats) {
+            e.transitions.stream().map(t -> t.arrivee).forEach(tmp::add);
+        }
+        List<Etat> tmp2 = etats;
+        tmp2.removeAll(tmp);
 
+        return tmp2;
+    }
 }
