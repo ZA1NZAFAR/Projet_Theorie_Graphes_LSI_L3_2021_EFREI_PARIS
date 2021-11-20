@@ -1,11 +1,9 @@
 import exception.CircuitDetectedException;
-import lombok.Getter;
-import lombok.Setter;
 import objects.Automate;
 import objects.Etat;
 import objects.Tools;
 
-import java.util.*;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
