@@ -1,25 +1,22 @@
 package objects;
 
-import com.google.common.collect.Sets;
-import k.Edge;
-import k.Vertex;
 import lombok.Getter;
 import lombok.Setter;
-import org.checkerframework.checker.nullness.qual.AssertNonNullIfNonNull;
-import sun.jvm.hotspot.utilities.Assert;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 public class Automate {
-    private final LinkedHashSet<Character> A = Sets.newLinkedHashSet();
+    private List<Integer> nomsSommets = new ArrayList<>();
+    private List<Etat> sommets = new ArrayList<>();
 
-    private List<Etat> etats = new ArrayList<>();
 
     public void read(String fileName) throws IOException {
         String[] values;
@@ -28,11 +25,11 @@ public class Automate {
         int verticesCount = Integer.parseInt(line);
 
         for (int i = 0; i < verticesCount; i++) {
-            A.add((char) (i + '0'));
+            nomsSommets.add(i);
         }
 
         for (int i = 0; i < verticesCount; i++) {
-            etats.add(new Etat(i + "", false, false, new ArrayList<>()));
+            sommets.add(new Etat(i, false, false, new ArrayList<>(), new Dates()));
         }
 
         line = br.readLine();
@@ -41,52 +38,90 @@ public class Automate {
         for (int i = 0; i < edgesCount; i++) {
             line = br.readLine();
             values = line.split("\\s");
-            String depart = values[0];
-            char value = values[1].charAt(0);
-            String arrivee = values[2];
 
-            if (!etats.get(etats.indexOf(getEtatFromVal(depart))).hasSuccesseur(new Transition(value, getEtatFromVal(depart), getEtatFromVal(arrivee))))
-                etats.get(etats.indexOf(getEtatFromVal(depart))).getTransitions().add(new Transition(value, getEtatFromVal(depart), getEtatFromVal(arrivee)));
+            Integer depart = Integer.valueOf(values[0]);
+            int value = Integer.parseInt(String.valueOf(values[1]));
+            Integer arrivee = Integer.valueOf(values[2]);
+
+            Etat etatDuDepart = sommets.get(sommets.indexOf(getSommetFromVal(depart)));
+            if (!getSuccessors(etatDuDepart).contains(new Transition(value, getSommetFromVal(depart), getSommetFromVal(arrivee))))
+                etatDuDepart.getTransitions().add(new Transition(value, getSommetFromVal(depart), getSommetFromVal(arrivee)));
         }
         br.close();
     }
 
 
     public void display() {
-        String indent = String.format("%-" + (A.size() * 3) + "s", "");
+        String indent = String.format("%-" + (nomsSommets.size() * 3) + "s", "");
 
         System.out.print("Etats" + indent.substring(0, indent.length() - "Etats".length()));
-        for (char a : A) {
+        for (Integer a : nomsSommets) {
             System.out.print(a + indent.substring(0, indent.length() - 1));
         }
         System.out.println("");
-        for (Etat e : etats) {
-            System.out.print(e.nom + indent.substring(0, indent.length() - 1));
-            for (char a : A) {
-                String temp = e.getListOfSuccessors(a).stream().map(etat -> etat.nom).collect(Collectors.toList()).toString();
-                System.out.print(temp + indent.substring(0, indent.length() - temp.length()));
+
+        for (Integer from : nomsSommets) {
+            System.out.print(from + indent.substring(0, indent.length() - 1));
+            for (Integer to : nomsSommets) {
+                List<Integer> transitionsFromToTo = getTransitionsFromXtoY(getSommetFromVal(from), getSommetFromVal(to));
+                System.out.print(transitionsFromToTo + indent.substring(0, indent.length() - transitionsFromToTo.toString().length()));
             }
-            System.out.println();
+            System.out.println("");
         }
     }
 
 
-    public Etat getEtatFromVal(String val) {
-        for (Etat e : etats) {
-            if (e.nom.equals(val))
+    public Etat getSommetFromVal(Integer val) {
+        for (Etat e : sommets) {
+            if (e.value.equals(val))
                 return e;
         }
         return null;
     }
 
-    public List<Etat> getEtats0() {
-        Set<Etat> tmp = new HashSet<>();
-        for (Etat e : etats) {
-            e.transitions.stream().map(t -> t.arrivee).forEach(tmp::add);
+    public Set<Etat> getPredecessors(Etat etat) {
+        Set<Etat> res = new HashSet<>();
+        for (Etat e : sommets) {
+            if (getSuccessors(e).contains(etat))
+                res.add(e);
         }
-        List<Etat> tmp2 = etats;
-        tmp2.removeAll(tmp);
+        return res;
+    }
 
-        return tmp2;
+    public List<Etat> getSuccessors(Etat etat) {
+        List<Etat> list = new ArrayList<>();
+        for (Transition transition : etat.transitions) {
+            Etat arrivee = transition.arrivee;
+            if (!list.contains(arrivee))
+                list.add(arrivee);
+        }
+        return list;
+    }
+
+    public List<Etat> getNextRanks() {
+        List<Etat> tmp = new ArrayList<>();
+        for (Integer c : nomsSommets) {
+            Etat etat = getSommetFromVal(c);
+            if (getPredecessors(etat).isEmpty()) {
+                tmp.add(getSommetFromVal(c));
+            }
+        }
+        return tmp;
+    }
+
+    public void removeSommets(List<Etat> toRemove) {
+        sommets.removeAll(toRemove);
+        for (Etat etat : toRemove) {
+            nomsSommets.remove(etat.value);
+        }
+    }
+
+    public List<Integer> getTransitionsFromXtoY(Etat from, Etat to) {
+        List<Integer> res = new ArrayList<>();
+        for (Transition transition : from.getTransitions()) {
+            if (transition.arrivee.equals(to))
+                res.add(transition.value);
+        }
+        return res;
     }
 }
