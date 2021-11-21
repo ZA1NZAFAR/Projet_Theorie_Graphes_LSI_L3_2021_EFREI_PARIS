@@ -27,10 +27,10 @@ public class Main {
             if (uneEntree && uneSortie) {
                 Tools.calculateDatesPlusTot(ranks, automateOG);
                 Tools.calculateDatePluTard(ranks, automateOG);
+                Tools.displayDates(automateOG);
             } else {
                 System.out.println("Unable to calculate shortest path!");
             }
-            Tools.displayDates(automateOG);
         } catch (CircuitDetectedException exception) {
             System.out.println("ERROR! Le graphe contient un circuit!");
         }
