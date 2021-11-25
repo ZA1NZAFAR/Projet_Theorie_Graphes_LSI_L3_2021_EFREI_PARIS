@@ -52,7 +52,7 @@ public class Automate {
 
 
     public void display() {
-        String indent = String.format("%-" + (nomsSommets.size() * 2) + "s", "");
+        String indent = String.format("%-" + (nomsSommets.size()) + "s", "");
 
         System.out.print("Etats" + indent.substring(0, indent.length() - "Etats".length()));
         for (Integer a : nomsSommets) {
