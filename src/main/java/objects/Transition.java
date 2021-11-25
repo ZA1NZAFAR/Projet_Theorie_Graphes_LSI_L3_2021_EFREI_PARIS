@@ -19,6 +19,12 @@ public class Transition implements Comparable<Transition> {
                 ", arrivee=" + arrivee.value +
                 "}";
     }
+    
+    public Transition(int value, Etat depart, Etat arrivee) {
+    	this.value = value;
+    	this.depart = depart;
+    	this.arrivee = arrivee;
+    }
 
     @Override
     public int compareTo(Transition o) {

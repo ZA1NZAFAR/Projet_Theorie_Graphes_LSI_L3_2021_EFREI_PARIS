@@ -20,6 +20,14 @@ public class Etat {
         this.value = i;
         transitions = new ArrayList<>();
     }
+    
+    public Etat(int value, boolean isInitial, boolean isTerminal, List<Transition> transitions, Dates dates) {
+    	this.value = value;
+    	this.isInitial = isInitial;
+    	this.isTerminal = isTerminal;
+    	this.transitions = transitions;
+    	this.dates = dates;
+    }
 
     @Override
     public String toString() {
@@ -41,5 +49,13 @@ public class Etat {
         }
         return set;
     }
+
+	public List<Transition> getTransitions() {
+		return transitions;
+	}
+
+	public Dates getDates() {
+		return dates;
+	}
 }
 

@@ -52,7 +52,7 @@ public class Automate {
 
 
     public void display() {
-        String indent = String.format("%-" + (nomsSommets.size() * 3) + "s", "");
+        String indent = String.format("%-" + (nomsSommets.size() * 2) + "s", "");
 
         System.out.print("Etats" + indent.substring(0, indent.length() - "Etats".length()));
         for (Integer a : nomsSommets) {
@@ -124,4 +124,9 @@ public class Automate {
         }
         return res;
     }
+
+
+	public List<Etat> getSommets() {
+		return sommets;
+	}
 }

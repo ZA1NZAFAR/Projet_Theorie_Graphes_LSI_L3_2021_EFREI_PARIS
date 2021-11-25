@@ -16,4 +16,14 @@ class Dates {
                 ", plusTard=" + plusTard +
                 '}';
     }
+
+	public void setPlusTot(int plusTot) {
+		this.plusTot = plusTot;
+		
+	}
+
+	public void setPlusTard(int plusTard) {
+		this.plusTard = plusTard;
+		
+	}
 }

@@ -10,7 +10,7 @@ public class Main {
         Automate automateOG = new Automate();
         boolean uneEntree, uneSortie;
 
-        automateOG.read("graphe.txt");
+        automateOG.read("Graphe G5.txt");
         automateOG.display();
 
         try {
@@ -20,8 +20,8 @@ public class Main {
             Tools.displayRanks(ranks);
 
 
-            System.out.println("Une seule entree? = " + uneEntree);
-            System.out.println("Une seule sortie? = " + uneSortie);
+            System.out.println("Une seule entree? = " + ((uneEntree) ? "Oui" : "Non"));
+            System.out.println("Une seule sortie? = " + ((uneSortie) ? "Oui" : "Non"));
 
             automateOG.read("graphe.txt");
             if (uneEntree && uneSortie) {
@@ -29,7 +29,7 @@ public class Main {
                 Tools.calculateDatePluTard(ranks, automateOG);
                 Tools.displayDates(automateOG);
             } else {
-                System.out.println("Unable to calculate shortest path!");
+                System.out.println("Impossible de calculer le plus court chemin/calendrier");
             }
         } catch (CircuitDetectedException exception) {
             System.out.println("ERROR! Le graphe contient un circuit!");
