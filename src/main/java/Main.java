@@ -10,27 +10,32 @@ public class Main {
         Automate automateOG = new Automate();
         boolean uneEntree, uneSortie;
 
-        automateOG.read("Graphe G5.txt");
+        automateOG.read("Graphe G1.txt");
         automateOG.display();
 
         try {
             List<List<Etat>> ranks = Tools.getRanks(automateOG);
             uneEntree = ranks.get(0).size() == 1;
             uneSortie = ranks.get(ranks.size() - 1).size() == 1;
+            System.out.println();
             Tools.displayRanks(ranks);
 
 
-            System.out.println("Une seule entree? = " + ((uneEntree) ? "Oui" : "Non"));
+            System.out.println("\nUne seule entree? = " + ((uneEntree) ? "Oui" : "Non"));
             System.out.println("Une seule sortie? = " + ((uneSortie) ? "Oui" : "Non"));
 
-            automateOG.read("graphe.txt");
-            if (uneEntree && uneSortie) {
+            automateOG.read("Graphe G1.txt");
+            System.out.println();
+            Tools.calculCalendrierAuPlusTot(automateOG);
+            
+            /*if (uneEntree && uneSortie) {
                 Tools.calculateDatesPlusTot(ranks, automateOG);
                 Tools.calculateDatePluTard(ranks, automateOG);
                 Tools.displayDates(automateOG);
             } else {
-                System.out.println("Impossible de calculer le plus court chemin/calendrier");
-            }
+                System.out.println("Impossible de calculer le plus court chemin/calendrier");;
+            }*/
+            
         } catch (CircuitDetectedException exception) {
             System.out.println("ERROR! Le graphe contient un circuit!");
         }

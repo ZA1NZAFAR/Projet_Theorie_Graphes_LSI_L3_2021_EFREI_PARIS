@@ -14,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class Automate {
-    private List<Integer> nomsSommets = new ArrayList<>();
+    private List<String> nomsSommets = new ArrayList<>();
     private List<Etat> sommets = new ArrayList<>();
 
 
@@ -25,11 +25,11 @@ public class Automate {
         int verticesCount = Integer.parseInt(line);
 
         for (int i = 0; i < verticesCount; i++) {
-            nomsSommets.add(i);
+            nomsSommets.add(String.valueOf(i));
         }
 
         for (int i = 0; i < verticesCount; i++) {
-            sommets.add(new Etat(i, false, false, new ArrayList<>(), new Dates()));
+            sommets.add(new Etat(String.valueOf(i), false, false, new ArrayList<>(), new Dates()));
         }
 
         line = br.readLine();
@@ -39,9 +39,9 @@ public class Automate {
             line = br.readLine();
             values = line.split("\\s");
 
-            Integer depart = Integer.valueOf(values[0]);
+            String depart = values[0];
             int value = Integer.parseInt(String.valueOf(values[1]));
-            Integer arrivee = Integer.valueOf(values[2]);
+            String arrivee = values[2];
 
             Etat etatDuDepart = sommets.get(sommets.indexOf(getSommetFromVal(depart)));
             if (!getSuccessors(etatDuDepart).contains(new Transition(value, getSommetFromVal(depart), getSommetFromVal(arrivee))))
@@ -55,15 +55,16 @@ public class Automate {
         String indent = String.format("%-" + (nomsSommets.size()) + "s", "");
 
         System.out.print("Etats" + indent.substring(0, indent.length() - "Etats".length()));
-        for (Integer a : nomsSommets) {
+        for (String a : nomsSommets) {
             System.out.print(a + indent.substring(0, indent.length() - 1));
         }
+        
         System.out.println("");
 
-        for (Integer from : nomsSommets) {
+        for (String from : nomsSommets) {
             System.out.print(from + indent.substring(0, indent.length() - 1));
-            for (Integer to : nomsSommets) {
-                List<Integer> transitionsFromToTo = getTransitionsFromXtoY(getSommetFromVal(from), getSommetFromVal(to));
+            for (String to : nomsSommets) {
+                List<Integer> transitionsFromToTo = getTransitionsFromXtoY(getSommetFromVal(String.valueOf(from)), getSommetFromVal(String.valueOf(to)));
                 System.out.print(transitionsFromToTo + indent.substring(0, indent.length() - transitionsFromToTo.toString().length()));
             }
             System.out.println("");
@@ -71,7 +72,7 @@ public class Automate {
     }
 
 
-    public Etat getSommetFromVal(Integer val) {
+    public Etat getSommetFromVal(String val) {
         for (Etat e : sommets) {
             if (e.value.equals(val))
                 return e;
@@ -100,10 +101,10 @@ public class Automate {
 
     public List<Etat> getNextRanks() {
         List<Etat> tmp = new ArrayList<>();
-        for (Integer c : nomsSommets) {
-            Etat etat = getSommetFromVal(c);
+        for (String c : nomsSommets) {
+            Etat etat = getSommetFromVal(String.valueOf(c));
             if (getPredecessors(etat).isEmpty()) {
-                tmp.add(getSommetFromVal(c));
+                tmp.add(getSommetFromVal(String.valueOf(c)));
             }
         }
         return tmp;

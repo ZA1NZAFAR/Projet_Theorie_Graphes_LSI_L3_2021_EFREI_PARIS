@@ -11,7 +11,31 @@ public class Transition implements Comparable<Transition> {
     Etat depart;
     Etat arrivee;
 
-    @Override
+    public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public Etat getDepart() {
+		return depart;
+	}
+
+	public void setDepart(Etat depart) {
+		this.depart = depart;
+	}
+
+	public Etat getArrivee() {
+		return arrivee;
+	}
+
+	public void setArrivee(Etat arrivee) {
+		this.arrivee = arrivee;
+	}
+
+	@Override
     public String toString() {
         return "Transition{" +
                 "value=" + value +

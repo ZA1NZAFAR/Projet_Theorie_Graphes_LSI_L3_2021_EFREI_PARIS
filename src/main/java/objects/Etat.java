@@ -10,18 +10,22 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Etat {
-    Integer value;
+    String value;
     boolean isInitial;
     boolean isTerminal;
     List<Transition> transitions;
     Dates dates;
+    
+    public String getValue() {
+    	return value;
+    }
 
-    public Etat(Integer i) {
-        this.value = i;
+    public Etat(String value) {
+        this.value = value;
         transitions = new ArrayList<>();
     }
     
-    public Etat(int value, boolean isInitial, boolean isTerminal, List<Transition> transitions, Dates dates) {
+    public Etat(String value, boolean isInitial, boolean isTerminal, List<Transition> transitions, Dates dates) {
     	this.value = value;
     	this.isInitial = isInitial;
     	this.isTerminal = isTerminal;
@@ -52,6 +56,10 @@ public class Etat {
 
 	public List<Transition> getTransitions() {
 		return transitions;
+	}
+	
+	public void setTransitions(List<Transition> transitions) {
+		this.transitions = transitions;
 	}
 
 	public Dates getDates() {
