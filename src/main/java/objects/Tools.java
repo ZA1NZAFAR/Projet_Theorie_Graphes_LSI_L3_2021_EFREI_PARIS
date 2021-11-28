@@ -60,6 +60,42 @@ public class Tools {
     	datesPlusTot.put(omega, calendrierAuPlusTot(graphe, omega, datesPlusTot));
     	displayDates(datesPlusTot, "Calendrier au plus tot");
     }
+    
+    public static void calculCalendrierAuPlusTard(Automate graphe, int finDatePlutTot) {
+    	Etat alpha = new Etat("Alpha", true, false, new ArrayList<>(), new Dates());
+    	Etat omega = new Etat("Omega", false, true, new ArrayList<>(), new Dates());
+    	
+    	Map<Etat, Integer> datesPlusTard = new LinkedHashMap<>();
+    	
+    	for (Etat etat : graphe.getSommets()) {
+    		if (graphe.getPredecessors(etat).size() == 0) {
+    			etat.getDates().setPlusTard(Integer.MAX_VALUE);
+    			Transition transition = new Transition(0, alpha, etat);
+    			alpha.getDates().setPlusTard(Integer.MAX_VALUE);
+    			List<Transition> transitions = alpha.getTransitions();
+    			transitions.add(transition);
+    			alpha.setTransitions(transitions);
+    		} else {
+    			etat.getDates().setPlusTard(Integer.MAX_VALUE);
+    		}
+    		
+    		if (graphe.getSuccessors(etat).size() == 0) {
+    			Transition transition = new Transition(0, etat, omega);
+    			omega.getDates().setPlusTard(finDatePlutTot);
+    			List<Transition> transitions = etat.getTransitions();
+    			transitions.add(transition);
+    			etat.setTransitions(transitions);
+    		}
+    	}
+    	
+    	graphe.getSommets().add(alpha);
+    	graphe.getSommets().add(omega);
+    	
+    	datesPlusTard.put(alpha, calendrierAuPlusTard(graphe, alpha, datesPlusTard));
+    	datesPlusTard.put(omega, finDatePlutTot);
+    	
+    	displayDates(datesPlusTard, "Calendrier au plus tard");
+    }
 
     public static int calendrierAuPlusTot(Automate graphe, Etat etat, Map<Etat, Integer> datesPlusTot) {
     	if (etat.getDates().plusTot != Integer.MIN_VALUE)
@@ -75,6 +111,22 @@ public class Tools {
     	etat.getDates().setPlusTot(datePlusTot);
     	datesPlusTot.put(etat, datePlusTot);
 		return etat.getDates().plusTot;
+    }
+    
+    public static int calendrierAuPlusTard(Automate graphe, Etat etat, Map<Etat, Integer> datesPlusTard) {
+    	if (etat.getDates().plusTard != Integer.MAX_VALUE)
+    		return etat.getDates().plusTard;
+    	
+    	int datePlusTard = Integer.MAX_VALUE;
+    	
+    	for (Etat e : graphe.getSuccessors(etat)) {
+    		datePlusTard = Math.min(datePlusTard, calendrierAuPlusTard(graphe, e, datesPlusTard) - 
+    				etat.getTransitions().stream().filter(t -> t.arrivee.getValue().equals(e.getValue())).collect(Collectors.toList()).get(0).getValue());
+    	}
+    	
+    	etat.getDates().setPlusTard(datePlusTard);
+    	datesPlusTard.put(etat, datePlusTard);
+		return etat.getDates().plusTard;
     }
     
     public static void displayDates(Map<Etat, Integer> dates, String calendrier) {
@@ -119,7 +171,7 @@ public class Tools {
         }
     }*/
 
-    public static void calculateDatePluTard(List<List<Etat>> ranks, Automate automate) {
+    /*public static void calculateDatePluTard(List<List<Etat>> ranks, Automate automate) {
         for (int i = ranks.size() - 1; i >= 0; i--) {
             if (i == ranks.size() - 1) {
                 for (int j = ranks.get(i).size() - 1; j >= 0; j--) {
@@ -141,7 +193,7 @@ public class Tools {
                 }
             }
         }
-    }
+    }*/
 
     public static void displayRanks(List<List<Etat>> ranks) {
         for (int i = 0; i < ranks.size(); i++) {

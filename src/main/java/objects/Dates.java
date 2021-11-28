@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-class Dates {
+public class Dates {
     int plusTot;
     int plusTard;
 
@@ -19,11 +19,17 @@ class Dates {
 
 	public void setPlusTot(int plusTot) {
 		this.plusTot = plusTot;
-		
 	}
 
 	public void setPlusTard(int plusTard) {
 		this.plusTard = plusTard;
-		
+	}
+	
+	public int getPlusTot() {
+		return plusTot;
+	}
+	
+	public int getPlusTard() {
+		return plusTard;
 	}
 }

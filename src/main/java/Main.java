@@ -8,6 +8,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws Exception {
         Automate automateOG = new Automate();
+        Automate automateOG_CPT = new Automate();
         boolean uneEntree, uneSortie;
 
         automateOG.read("Graphe G1.txt");
@@ -27,6 +28,11 @@ public class Main {
             automateOG.read("Graphe G1.txt");
             System.out.println();
             Tools.calculCalendrierAuPlusTot(automateOG);
+            
+            automateOG_CPT.read("Graphe G1.txt");
+            int dateFinPlusTot = automateOG.getSommetFromVal("Omega").getDates().getPlusTot();
+            System.out.println();
+            Tools.calculCalendrierAuPlusTard(automateOG_CPT, dateFinPlusTot);
             
             /*if (uneEntree && uneSortie) {
                 Tools.calculateDatesPlusTot(ranks, automateOG);
