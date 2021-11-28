@@ -10,8 +10,9 @@ public class Main {
         Automate automateOG = new Automate();
         Automate automateOG_CPT = new Automate();
         boolean uneEntree, uneSortie;
-
-        automateOG.read("Graphe G1.txt");
+        String fileName = "Graphe G1.txt";
+        
+        automateOG.read(fileName);
         automateOG.display();
 
         try {
@@ -25,11 +26,11 @@ public class Main {
             System.out.println("\nUne seule entree? = " + ((uneEntree) ? "Oui" : "Non"));
             System.out.println("Une seule sortie? = " + ((uneSortie) ? "Oui" : "Non"));
 
-            automateOG.read("Graphe G1.txt");
+            automateOG.read(fileName);
             System.out.println();
             Tools.calculCalendrierAuPlusTot(automateOG);
             
-            automateOG_CPT.read("Graphe G1.txt");
+            automateOG_CPT.read(fileName);
             int dateFinPlusTot = automateOG.getSommetFromVal("Omega").getDates().getPlusTot();
             System.out.println();
             Tools.calculCalendrierAuPlusTard(automateOG_CPT, dateFinPlusTot);

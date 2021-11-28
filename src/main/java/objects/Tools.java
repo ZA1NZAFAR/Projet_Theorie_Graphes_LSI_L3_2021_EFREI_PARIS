@@ -130,16 +130,35 @@ public class Tools {
     }
     
     public static void displayDates(Map<Etat, Integer> dates, String calendrier) {
+    	Map<Etat, Integer> result = new LinkedHashMap<>();
     	String indent = String.format("%-" + (dates.size() - 5) + "s", "");
     	StringBuilder sb = new StringBuilder();
     	
-    	for (Map.Entry<Etat, Integer> entry : dates.entrySet()) {
-    		sb.append(entry.getKey().value + indent.substring(0, indent.length() - entry.getKey().value.length()));
+    	Map.Entry<Etat, Integer> entry = dates.entrySet().stream().filter(e -> e.getKey().getValue().equals("Alpha")).collect(Collectors.toList()).get(0);
+    	result.put(entry.getKey(), entry.getValue());
+    	
+    	for (int i = 0; i < dates.size() - 2; i++) {
+    		final int index = i;
+    		entry = dates.entrySet().stream().filter(e -> e.getKey().getValue().equals(String.valueOf(index))).collect(Collectors.toList()).get(0);
+    		result.put(entry.getKey(), entry.getValue());
+    	}
+    	
+    	entry = dates.entrySet().stream().filter(e -> e.getKey().getValue().equals("Omega")).collect(Collectors.toList()).get(0);
+    	result.put(entry.getKey(), entry.getValue());
+    	
+    	for (Map.Entry<Etat, Integer> e : result.entrySet()) {
+    		if (e.getKey().getValue().equals("Alpha")) {
+    			sb.append("Debut" + indent.substring(0, indent.length() - "Alpha".length()));
+    		} else if (e.getKey().getValue().equals("Omega")) {
+    			sb.append("Fin" + indent.substring(0, indent.length() - "Fin".length()));
+    		} else {
+    			sb.append(e.getKey().value + indent.substring(0, indent.length() - e.getKey().value.length()));
+    		}
     	}
     	
     	sb.append("\n");
     	
-    	for (int date : dates.values()) {
+    	for (int date : result.values()) {
     		sb.append(date + indent.substring(0, indent.length() - String.valueOf(date).length()));
     	}
     	
